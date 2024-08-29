@@ -42,9 +42,9 @@
 
 	async function load() {
 		pageNum += 1;
-		const inforeq = await fetch('https://bazaar.kractero.com/api/tradestotal');
+		const inforeq = await fetch('https://maki.kractero.com/api/tradestotal');
 		info = await inforeq.json();
-		const req = await fetch(`https://bazaar.kractero.com/api/trades-paginated?page=${pageNum}`);
+		const req = await fetch(`https://maki.kractero.com/api/trades-paginated?page=${pageNum}`);
 		const newTrades = await req.json();
 
 		if (newTrades.length > 0) {
