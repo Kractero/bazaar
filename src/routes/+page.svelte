@@ -3,6 +3,7 @@
 	import FormInput from '$lib/components/FormInput.svelte';
 	import FormPrice from '$lib/components/FormPrice.svelte';
 	import FormSelect from '$lib/components/FormSelect.svelte';
+	import Head from '$lib/components/Head.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import type { DateValue } from '@internationalized/date';
 	import { onMount } from 'svelte';
@@ -65,6 +66,8 @@
 		}
 	}
 </script>
+
+<Head title={`Bazaar`} description={'An archive of NationStates Trading Card trades'} />
 
 <header class="mb-10 flex flex-col items-center justify-center pt-40">
 	<h2 class="text-5xl font-bold">Bazaar</h2>

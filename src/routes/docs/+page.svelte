@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Head from '$lib/components/Head.svelte';
 	import ThemeSwitcher from '$lib/components/ThemeSwitcher.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { Home, Notebook } from 'lucide-svelte';
@@ -55,6 +56,8 @@ The frontend is served as a page by Express using the EJS templating engine. It 
 - Cause it isn't, I wanted the backend to be independent from Hare. A frontend can be eventually added to Hare.
 `;
 </script>
+
+<Head title={`Bazaar - Docs`} description={'An archive of NationStates Trading Card trades'} />
 
 <header class="mb-10 flex flex-col items-center justify-center pt-40">
 	<h2 class="text-5xl font-bold">Bazaar</h2>
