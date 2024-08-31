@@ -5,12 +5,13 @@
 	import FormSelect from '$lib/components/FormSelect.svelte';
 	import Head from '$lib/components/Head.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
-	import type { DateValue } from '@internationalized/date';
 	import { onMount } from 'svelte';
 	import type { Trades } from '../types';
 	import TradeRow from '$lib/components/TradeRow.svelte';
 	import ThemeSwitcher from '$lib/components/ThemeSwitcher.svelte';
 	import { Home, Notebook } from 'lucide-svelte';
+	import { pushState } from '$app/navigation';
+	import { parseDate, type DateValue } from '@internationalized/date';
 
 	let buyer = '';
 	let seller = '';
@@ -22,13 +23,30 @@
 	let category: string = 'All';
 	let sortVal: string = 'Timestamp';
 	let orderVal: string = 'Desc';
+	let queryString = '';
 
 	let trades: Array<Trades> = [];
+	let foundCount: number = 0;
 	let info: { count: number; update: string } = {} as { count: number; update: string };
 	let pageNum = 0;
 	let observer: IntersectionObserver | null = null;
 	let lastItemRef: HTMLTableRowElement | null = null;
 	onMount(async () => {
+		const currentURL = window.location.href;
+		const url = new URL(currentURL);
+		const params = url.searchParams;
+		queryString = params.toString();
+		pageNum = Number(params.get('page')) || 0;
+		buyer = params.get('buyer') || '';
+		seller = params.get('seller') || '';
+		minPrice = params.get('minprice') ? Number(params.get('minprice')) : '';
+		maxPrice = params.get('maxprice') ? Number(params.get('maxprice')) : '';
+		minTimestamp = params.get('beforetime') ? parseDate(params.get('beforetime')!) : undefined;
+		maxTimestamp = params.get('sincetime') ? parseDate(params.get('sincetime')!) : undefined;
+		season = params.get('season') ? Number(params.get('season')) : undefined;
+		category = params.get('category') || 'All';
+		sortVal = params.get('sortVal') || 'Timestamp';
+		orderVal = params.get('orderVal') || 'Desc';
 		load();
 
 		observer = new IntersectionObserver((entries) => {
@@ -43,15 +61,47 @@
 
 	async function load() {
 		pageNum += 1;
-		const inforeq = await fetch('https://maki.kractero.com/api/tradestotal');
+		const inforeq = await fetch(`https://maki.kractero.com/api/tradestotal?${queryString}`);
 		info = await inforeq.json();
-		const req = await fetch(`https://maki.kractero.com/api/trades-paginated?page=${pageNum}`);
+		foundCount = info.count;
+		const req = await fetch(
+			`https://maki.kractero.com/api/trades-paginated?page=${pageNum}&${queryString}`
+		);
 		const newTrades = await req.json();
 
 		if (newTrades.length > 0) {
 			trades = [...trades, ...newTrades]; // Append new trades to the existing list
 			trades[trades.length - 1].last = true;
 		}
+	}
+
+	async function onSubmit(event: Event) {
+		// shadcn / bits-ui does not play well with forms why are selects input undefined maybe im too tired
+		// i literally do not know why it shows up in the query parameters on submit as undefined
+		// and the calender literally does not have a name even with the datepicker popover
+		queryString = [
+			buyer && `buyer=${encodeURIComponent(buyer)}`,
+			seller && `seller=${encodeURIComponent(seller)}`,
+			minPrice && `minPrice=${encodeURIComponent(minPrice)}`,
+			maxPrice && `maxPrice=${encodeURIComponent(maxPrice)}`,
+			minTimestamp && `minTimestamp=${encodeURIComponent(minTimestamp.toString())}`,
+			maxTimestamp && `maxTimestamp=${encodeURIComponent(maxTimestamp.toString())}`,
+			season !== undefined && `season=${encodeURIComponent(season)}`,
+			category && `category=${encodeURIComponent(category)}`,
+			sortVal && `sortval=${encodeURIComponent(sortVal)}`,
+			orderVal && `sortorder=${encodeURIComponent(orderVal)}`
+		]
+			.filter(Boolean)
+			.join('&');
+		const currentURL = window.location.href;
+		const baseURL = currentURL.split('?')[0];
+		pushState(`${baseURL}?${queryString}`, `${baseURL}?${queryString}`);
+
+		const num = await fetch(`https://maki.kractero.com/api/tradestotal?${queryString}`);
+		const count = await num.json();
+		foundCount = count.count;
+		let tradesRes = await fetch(`https://maki.kractero.com/api/trades-paginated?${queryString}`);
+		trades = await tradesRes.json();
 	}
 
 	function handleLastItem(node: HTMLTableRowElement | null) {
@@ -85,7 +135,7 @@
 </header>
 <main>
 	<div class="flex flex-col items-center justify-center">
-		<form class="flex w-80 flex-col gap-4">
+		<form on:submit|preventDefault={onSubmit} class="flex w-80 flex-col gap-4">
 			<div class="flex justify-between gap-2">
 				<FormInput bind:bindValue={buyer} id="buyer" label="Buyer" />
 			</div>
@@ -112,16 +162,21 @@
 			<div class="flex justify-between gap-2">
 				<FormSelect
 					bind:bindValue={sortVal}
-					id="sortVal"
+					id="sortval"
 					items={['Timestamp', 'Price']}
 					label="Sort By"
 				/>
 			</div>
 			<div class="flex justify-between gap-2">
-				<FormSelect bind:bindValue={orderVal} id="orderVal" items={['Desc', 'Asc']} label="Order" />
+				<FormSelect bind:bindValue={orderVal} id="orderval" items={['Desc', 'Asc']} label="Order" />
 			</div>
 			<Button type="submit" class="mx-auto" variant={'default'}>Submit</Button>
 		</form>
+		<p class={`mt-8 text-center ${foundCount === 0 ? ' text-red-200' : 'text-blue-400'}`}>
+			{foundCount === 0
+				? 'No trades found with the requested parameters'
+				: `${foundCount} were found.`}
+		</p>
 		{#if trades.length > 0}
 			<div class="mb-40 mt-5">
 				<p class="total mb-4 text-center"></p>

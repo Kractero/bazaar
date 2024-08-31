@@ -6,6 +6,10 @@
 	export let maxValue: string | number;
 
 	function validateValues() {
+		if (!minValue || !maxValue) {
+			return;
+		}
+
 		if (Number(minValue) > Number(maxValue)) {
 			minValue = Number(maxValue);
 		}

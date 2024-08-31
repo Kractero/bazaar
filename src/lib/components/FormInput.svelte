@@ -22,6 +22,7 @@
 		class={'block max-w-36 text-base'}
 		{id}
 		type={type || 'text'}
+		name={id}
 		bind:value={bindValue}
 		{required}
 		{disabled}

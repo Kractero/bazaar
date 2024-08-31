@@ -16,14 +16,12 @@
 
 	function validateDates() {
 		if (!minTimestamp || !maxTimestamp) return;
-		console.log(minTimestamp);
 		if (minTimestamp > maxTimestamp) {
 			minTimestamp = maxTimestamp;
 		}
 		if (maxTimestamp < minTimestamp) {
 			maxTimestamp = minTimestamp;
 		}
-		console.log('shambolic');
 	}
 </script>
 
