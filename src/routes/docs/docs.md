@@ -2,8 +2,6 @@ Bazaar is a backend and frontend wrapper to a database containing all trade reco
 
 The purpose of Bazaar is to provide a comprehensive platform for managing and retrieving trade records.
 
-<a href="https://github.com/kractero/bazaar/" target="_blank" rel="noreferrer noopener">Repo</a>
-
 ## DB
 
 The data was inspired from a dump that 9003 generated off of data up to October 15th. I wrote some python scripts to push the data into a database, then some scripts to pull the latest data not included in the database. At the moment it updates every `5` minutes.
