@@ -61,10 +61,21 @@
 
 	async function load() {
 		pageNum += 1
-		const inforeq = await fetch(`${PUBLIC_API_URL}/api/tradestotal?${queryString}`)
+		const inforeq = await fetch(`${PUBLIC_API_URL}/api/tradestotal?${queryString}`, {
+			headers: {
+				'X-Origin': 'frontend',
+			},
+		})
 		info = await inforeq.json()
 		foundCount = info.count
-		const req = await fetch(`${PUBLIC_API_URL}/api/trades-paginated?page=${pageNum}&${queryString}`)
+		const req = await fetch(
+			`${PUBLIC_API_URL}/api/trades-paginated?page=${pageNum}&${queryString}`,
+			{
+				headers: {
+					'X-Origin': 'frontend',
+				},
+			}
+		)
 		const newTrades = await req.json()
 
 		if (newTrades.length > 0) {
@@ -95,10 +106,18 @@
 		const baseURL = currentURL.split('?')[0]
 		pushState(`${baseURL}?${queryString}`, `${baseURL}?${queryString}`)
 
-		const num = await fetch(`${PUBLIC_API_URL}/api/tradestotal?${queryString}`)
+		const num = await fetch(`${PUBLIC_API_URL}/api/tradestotal?${queryString}`, {
+			headers: {
+				'X-Origin': 'frontend',
+			},
+		})
 		const count = await num.json()
 		foundCount = count.count
-		let tradesRes = await fetch(`${PUBLIC_API_URL}/api/trades-paginated?${queryString}`)
+		let tradesRes = await fetch(`${PUBLIC_API_URL}/api/trades-paginated?${queryString}`, {
+			headers: {
+				'X-Origin': 'frontend',
+			},
+		})
 		trades = await tradesRes.json()
 	}
 
