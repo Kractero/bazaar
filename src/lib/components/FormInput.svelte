@@ -27,6 +27,6 @@
 		{required}
 		{disabled}
 		min="1"
-		max="3"
+		max="4"
 	/>
 </div>
