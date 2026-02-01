@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import ThemeSwitcher from '$lib/components/ThemeSwitcher.svelte'
 	import Button from '$lib/components/ui/button/button.svelte'
 	import { Home, Notebook } from 'lucide-svelte'
@@ -6,6 +6,11 @@
 	import '../app.css'
 
 	import { ModeWatcher } from 'mode-watcher'
+	interface Props {
+		children?: import('svelte').Snippet;
+	}
+
+	let { children }: Props = $props();
 </script>
 
 <ModeWatcher />
@@ -30,4 +35,4 @@
 	</div>
 </header>
 
-<slot></slot>
+{@render children?.()}

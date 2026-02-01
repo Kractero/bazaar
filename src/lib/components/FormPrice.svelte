@@ -2,8 +2,12 @@
 	import Input from './ui/input/input.svelte';
 	import Label from './ui/label/label.svelte';
 
-	export let minValue: string | number;
-	export let maxValue: string | number;
+	interface Props {
+		minValue: string | number;
+		maxValue: string | number;
+	}
+
+	let { minValue = $bindable(), maxValue = $bindable() }: Props = $props();
 
 	function validateValues() {
 		if (!minValue || !maxValue) {

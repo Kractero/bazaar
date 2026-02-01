@@ -1,11 +1,12 @@
 import type { Config } from 'tailwindcss'
+import tailwindcssAnimate from 'tailwindcss-animate'
 import { fontFamily } from 'tailwindcss/defaultTheme'
 
 const config: Config = {
 	darkMode: ['class'],
 	content: ['./src/**/*.{html,js,svelte,ts}'],
 	safelist: ['dark'],
-	plugins: [require('@tailwindcss/typography'), 'prettier-plugin-tailwindcss'],
+	plugins: [require('@tailwindcss/typography'), 'prettier-plugin-tailwindcss', tailwindcssAnimate],
 	theme: {
 		container: {
 			center: true,

@@ -2,13 +2,25 @@
 	import Input from './ui/input/input.svelte';
 	import Label from './ui/label/label.svelte';
 
-	export let id: string;
-	export let label: string;
-	export let bindValue: string | number | undefined;
-	export let subTitle: string = '';
-	export let required: boolean = false;
-	export let disabled: boolean = false;
-	export let type = '';
+	interface Props {
+		id: string;
+		label: string;
+		bindValue: string | number | undefined;
+		subTitle?: string;
+		required?: boolean;
+		disabled?: boolean;
+		type?: string;
+	}
+
+	let {
+		id,
+		label,
+		bindValue = $bindable(),
+		subTitle = '',
+		required = false,
+		disabled = false,
+		type = ''
+	}: Props = $props();
 </script>
 
 <div class={`flex w-full max-w-lg items-center justify-between gap-4`}>

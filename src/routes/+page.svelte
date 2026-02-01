@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { preventDefault } from 'svelte/legacy';
+
 	import { onMount } from 'svelte'
 	import { parseDate, type DateValue } from '@internationalized/date'
 	import { pushState } from '$app/navigation'
@@ -13,21 +15,21 @@
 
 	import type { Trades } from '../types'
 
-	let buyer = ''
-	let seller = ''
-	let minPrice: number | string = ''
-	let maxPrice: number | string = ''
-	let minTimestamp: DateValue | undefined = undefined
-	let maxTimestamp: DateValue | undefined = undefined
-	let season: number | undefined = undefined
-	let category: string = 'All'
-	let sortVal: string = 'Timestamp'
-	let orderVal: string = 'Desc'
+	let buyer = $state('')
+	let seller = $state('')
+	let minPrice: number | string = $state('')
+	let maxPrice: number | string = $state('')
+	let minTimestamp: DateValue | undefined = $state(undefined)
+	let maxTimestamp: DateValue | undefined = $state(undefined)
+	let season: number | undefined = $state(undefined)
+	let category: string = $state('All')
+	let sortVal: string = $state('Timestamp')
+	let orderVal: string = $state('Desc')
 	let queryString = ''
 
-	let trades: Array<Trades> = []
-	let foundCount: number = 0
-	let info: { count: number; update: string } = {} as { count: number; update: string }
+	let trades: Array<Trades> = $state([])
+	let foundCount: number = $state(0)
+	let info: { count: number; update: string } = $state({} as { count: number; update: string })
 	let pageNum = 0
 	let observer: IntersectionObserver | null = null
 	let lastItemRef: HTMLTableRowElement | null = null
@@ -144,7 +146,7 @@
 		<p class="mb-4 text-center">
 			Counting {info.count ? info.count.toLocaleString() : info.count} trades since April 1st 2018.
 		</p>
-		<form on:submit|preventDefault={onSubmit} class="flex w-80 flex-col gap-4">
+		<form onsubmit={preventDefault(onSubmit)} class="flex w-80 flex-col gap-4">
 			<div class="flex justify-between gap-2">
 				<FormInput bind:bindValue={buyer} id="buyer" label="Buyer" />
 			</div>
