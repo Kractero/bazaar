@@ -1,16 +1,17 @@
 <script lang="ts">
 	import ThemeSwitcher from '$lib/components/ThemeSwitcher.svelte'
 	import Button from '$lib/components/ui/button/button.svelte'
-	import { Home, Notebook } from 'lucide-svelte'
+	import { House, Notebook } from 'lucide-svelte'
 
 	import '../app.css'
 
 	import { ModeWatcher } from 'mode-watcher'
+
 	interface Props {
-		children?: import('svelte').Snippet;
+		children?: import('svelte').Snippet
 	}
 
-	let { children }: Props = $props();
+	let { children }: Props = $props()
 </script>
 
 <ModeWatcher />
@@ -18,10 +19,10 @@
 <header class="mb-10 flex flex-col items-center justify-center pt-40">
 	<h2 class="text-5xl font-bold">Bazaar</h2>
 	<div class="mt-4 flex">
-		<Button variant="ghost" href="/"><Home class="size-6" /></Button>
+		<Button variant="ghost" href="/"><House class="size-6" /></Button>
 		<ThemeSwitcher />
 		<Button variant="ghost" href="/docs"><Notebook class="size-6" /></Button>
-		<Button variant="ghost" href="https://github.com/Kractero/kee">
+		<Button variant="ghost" href="https://github.com/Kractero/bazaar">
 			<svg
 				class="my-auto size-6 dark:invert"
 				role="img"
