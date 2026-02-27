@@ -1,7 +1,6 @@
 <script lang="ts">
-	import { preventDefault } from 'svelte/legacy';
-
 	import { onMount } from 'svelte'
+	import { preventDefault } from 'svelte/legacy'
 	import { parseDate, type DateValue } from '@internationalized/date'
 	import { pushState } from '$app/navigation'
 	import { PUBLIC_API_URL } from '$env/static/public'
@@ -15,6 +14,7 @@
 
 	import type { Trades } from '../types'
 
+	let cardId = $state('')
 	let buyer = $state('')
 	let seller = $state('')
 	let minPrice: number | string = $state('')
@@ -39,6 +39,7 @@
 		const params = url.searchParams
 		queryString = params.toString()
 		pageNum = Number(params.get('page')) || 0
+		cardId = params.get('cardId') || ''
 		buyer = params.get('buyer') || ''
 		seller = params.get('seller') || ''
 		minPrice = params.get('minprice') ? Number(params.get('minprice')) : ''
@@ -87,10 +88,12 @@
 	}
 
 	async function onSubmit(event: Event) {
+		event.preventDefault()
 		// shadcn / bits-ui does not play well with forms why are selects input undefined maybe im too tired
 		// i literally do not know why it shows up in the query parameters on submit as undefined
 		// and the calender literally does not have a name even with the datepicker popover
 		queryString = [
+			cardId && `cardId=${encodeURIComponent(cardId)}`,
 			buyer && `buyer=${encodeURIComponent(buyer)}`,
 			seller && `seller=${encodeURIComponent(seller)}`,
 			minPrice && `minprice=${encodeURIComponent(minPrice)}`,
@@ -146,7 +149,10 @@
 		<p class="mb-4 text-center">
 			Counting {info.count ? info.count.toLocaleString() : info.count} trades since April 1st 2018.
 		</p>
-		<form onsubmit={preventDefault(onSubmit)} class="flex w-80 flex-col gap-4">
+		<form onsubmit={e => onSubmit(e)} class="flex w-80 flex-col gap-4">
+			<div class="flex justify-between gap-2">
+				<FormInput bind:bindValue={cardId} id="cardId" label="Card ID" />
+			</div>
 			<div class="flex justify-between gap-2">
 				<FormInput bind:bindValue={buyer} id="buyer" label="Buyer" />
 			</div>
