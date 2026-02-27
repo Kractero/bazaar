@@ -1,23 +1,17 @@
 <script lang="ts">
-	import * as Select from '$lib/components/ui/select';
+	import * as Select from '$lib/components/ui/select'
 
-	import Label from './ui/label/label.svelte';
+	import Label from './ui/label/label.svelte'
 
 	interface Props {
-		label: string;
-		subTitle?: string;
-		id: string;
-		items: string[];
-		bindValue: any;
+		label: string
+		subTitle?: string
+		id: string
+		items: string[]
+		bindValue: any
 	}
 
-	let {
-		label,
-		subTitle = '',
-		id,
-		items,
-		bindValue = $bindable()
-	}: Props = $props();
+	let { label, subTitle = '', id, items, bindValue = $bindable() }: Props = $props()
 </script>
 
 <div class={`flex w-full max-w-lg items-center justify-between gap-4`}>
@@ -28,19 +22,19 @@
 		{/if}</Label
 	>
 	<Select.Root
-		onSelectedChange={(v) => {
-			bindValue = v && v.value;
+		type="single"
+		onValueChange={(v: any) => {
+			bindValue = v && v
 		}}
-		selected={bindValue}
+		value={bindValue}
 	>
-		<Select.Trigger class="data-[placeholder]:[&>span]:text-primary w-36">
-			<Select.Value class="mr-2" placeholder={bindValue} />
+		<Select.Trigger class="data-placeholder:[&>span]:text-primary max-w-55.25 flex-1 justify-end">
+			<span class="pr-2">{bindValue}</span>
 		</Select.Trigger>
-		<Select.Content>
-			{#each items as item}
+		<Select.Content class="text-left">
+			{#each items as item, i}
 				<Select.Item value={item}>{item}</Select.Item>
 			{/each}
 		</Select.Content>
-		<Select.Input name={id} />
 	</Select.Root>
 </div>

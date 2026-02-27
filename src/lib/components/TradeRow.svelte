@@ -18,7 +18,7 @@
 </script>
 
 <tr bind:this={row}>
-	<td class="break-words border border-slate-600 p-2 text-xs sm:text-base">
+	<td class="wrap-break-word border border-slate-600 p-2 text-xs sm:text-base">
 		<a
 			target="_blank"
 			rel="noreferrer noopener"
@@ -43,7 +43,7 @@
 			{trade.card_name}
 		</a>
 	</td>
-	<td class="break-words border border-slate-600 p-2 text-xs sm:text-base">
+	<td class="wrap-break-word border border-slate-600 p-2 text-xs sm:text-base">
 		<a
 			target="_blank"
 			rel="noreferrer noopener"
@@ -53,7 +53,7 @@
 			{trade.seller}
 		</a>
 	</td>
-	<td class="break-words border border-slate-600 p-2 text-xs sm:text-base">
+	<td class="wrap-break-word border border-slate-600 p-2 text-xs sm:text-base">
 		<a
 			target="_blank"
 			rel="noreferrer noopener"
@@ -64,7 +64,7 @@
 		</a>
 	</td>
 	<td class="border border-slate-600 p-2 text-xs sm:text-base">{trade.price}</td>
-	<td class="break-words border border-slate-600 p-2 text-[0.5rem] sm:text-base">
+	<td class="wrap-break-word border border-slate-600 p-2 text-[0.5rem] sm:text-base">
 		{trade.timestamp}
 	</td>
 </tr>

@@ -14,7 +14,7 @@
 
 	import type { Trades } from '../types'
 
-	let cardId = $state('')
+	let cardid = $state('')
 	let buyer = $state('')
 	let seller = $state('')
 	let minPrice: number | string = $state('')
@@ -39,7 +39,7 @@
 		const params = url.searchParams
 		queryString = params.toString()
 		pageNum = Number(params.get('page')) || 0
-		cardId = params.get('cardId') || ''
+		cardid = params.get('cardid') || ''
 		buyer = params.get('buyer') || ''
 		seller = params.get('seller') || ''
 		minPrice = params.get('minprice') ? Number(params.get('minprice')) : ''
@@ -93,7 +93,7 @@
 		// i literally do not know why it shows up in the query parameters on submit as undefined
 		// and the calender literally does not have a name even with the datepicker popover
 		queryString = [
-			cardId && `cardId=${encodeURIComponent(cardId)}`,
+			cardid && `cardid=${encodeURIComponent(cardid)}`,
 			buyer && `buyer=${encodeURIComponent(buyer)}`,
 			seller && `seller=${encodeURIComponent(seller)}`,
 			minPrice && `minprice=${encodeURIComponent(minPrice)}`,
@@ -151,7 +151,7 @@
 		</p>
 		<form onsubmit={e => onSubmit(e)} class="flex w-80 flex-col gap-4">
 			<div class="flex justify-between gap-2">
-				<FormInput bind:bindValue={cardId} id="cardId" label="Card ID" />
+				<FormInput bind:bindValue={cardid} id="cardid" label="Card ID" />
 			</div>
 			<div class="flex justify-between gap-2">
 				<FormInput bind:bindValue={buyer} id="buyer" label="Buyer" />
@@ -195,7 +195,7 @@
 				: `${foundCount} were found.`}
 		</p>
 		{#if trades.length > 0}
-			<div class="mb-40 mt-5">
+			<div class="mt-5 mb-40">
 				<p class="total mb-4 text-center"></p>
 				<table class="w-full table-fixed lg:max-w-5xl">
 					<thead>
