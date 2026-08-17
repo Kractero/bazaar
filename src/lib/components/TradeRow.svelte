@@ -1,23 +1,14 @@
 <script lang="ts">
-	import { run } from 'svelte/legacy';
-
 	import type { Trades } from '../../types';
 
 	interface Props {
 		trade: Trades;
-		setRef: (node: HTMLTableRowElement | null) => void;
 	}
 
-	let { trade, setRef }: Props = $props();
-
-	let row: HTMLTableRowElement = $state();
-
-	run(() => {
-		setRef(row);
-	}); // Bind `row` to the parent via `setRef`
+	let { trade }: Props = $props();
 </script>
 
-<tr bind:this={row}>
+<tr>
 	<td class="wrap-break-word border border-slate-600 p-2 text-xs sm:text-base">
 		<a
 			target="_blank"

@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
-	import { preventDefault } from 'svelte/legacy'
 	import { parseDate, type DateValue } from '@internationalized/date'
 	import { pushState } from '$app/navigation'
 	import { PUBLIC_API_URL } from '$env/static/public'
@@ -31,9 +30,9 @@
 	let foundCount: number = $state(0)
 	let info: { count: number; update: string } = $state({} as { count: number; update: string })
 	let pageNum = 0
+	let sentinel: HTMLDivElement
 	let observer: IntersectionObserver | null = null
-	let lastItemRef: HTMLTableRowElement | null = null
-	onMount(async () => {
+	onMount(() => {
 		const currentURL = window.location.href
 		const url = new URL(currentURL)
 		const params = url.searchParams
@@ -53,13 +52,13 @@
 		load()
 
 		observer = new IntersectionObserver(entries => {
-			entries.forEach(entry => {
-				if (entry.isIntersecting) {
-					load()
-					observer!.unobserve(entry.target)
-				}
-			})
+			if (entries[0].isIntersecting) {
+				load()
+			}
 		})
+		observer.observe(sentinel)
+
+		return () => observer?.disconnect()
 	})
 
 	async function load() {
@@ -82,8 +81,7 @@
 		const newTrades = await req.json()
 
 		if (newTrades.length > 0) {
-			trades = [...trades, ...newTrades] // Append new trades to the existing list
-			trades[trades.length - 1].last = true
+			trades.push(...newTrades)
 		}
 	}
 
@@ -126,17 +124,6 @@
 		trades = await tradesRes.json()
 	}
 
-	function handleLastItem(node: HTMLTableRowElement | null) {
-		if (observer) {
-			if (lastItemRef) {
-				observer.unobserve(lastItemRef)
-			}
-			lastItemRef = node
-			if (lastItemRef) {
-				observer.observe(lastItemRef)
-			}
-		}
-	}
 </script>
 
 <Head title={`Bazaar`} description={'An archive of NationStates Trading Card trades'} />
@@ -208,12 +195,13 @@
 						</tr>
 					</thead>
 					<tbody id="trades">
-						{#each trades as trade, i}
-							<TradeRow {trade} setRef={i === trades.length - 1 ? handleLastItem : () => {}} />
+						{#each trades as trade}
+							<TradeRow {trade} />
 						{/each}
 					</tbody>
 				</table>
 			</div>
 		{/if}
+		<div bind:this={sentinel} class="h-1"></div>
 	</div>
 </main>
