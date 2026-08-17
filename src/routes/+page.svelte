@@ -49,6 +49,7 @@
 		category = params.get('category') || 'All'
 		sortVal = params.get('sortVal') || 'Timestamp'
 		orderVal = params.get('orderVal') || 'Desc'
+		fetchTotal()
 		load()
 
 		observer = new IntersectionObserver(entries => {
@@ -61,15 +62,16 @@
 		return () => observer?.disconnect()
 	})
 
+	async function fetchTotal() {
+		const res = await fetch(`${PUBLIC_API_URL}/api/tradestotal?${queryString}`, {
+			headers: { 'X-Origin': 'frontend' },
+		})
+		info = await res.json()
+		foundCount = info.count
+	}
+
 	async function load() {
 		pageNum += 1
-		const inforeq = await fetch(`${PUBLIC_API_URL}/api/tradestotal?${queryString}`, {
-			headers: {
-				'X-Origin': 'frontend',
-			},
-		})
-		info = await inforeq.json()
-		foundCount = info.count
 		const req = await fetch(
 			`${PUBLIC_API_URL}/api/trades-paginated?page=${pageNum}&${queryString}`,
 			{
@@ -109,13 +111,7 @@
 		const baseURL = currentURL.split('?')[0]
 		pushState(`${baseURL}?${queryString}`, `${baseURL}?${queryString}`)
 
-		const num = await fetch(`${PUBLIC_API_URL}/api/tradestotal?${queryString}`, {
-			headers: {
-				'X-Origin': 'frontend',
-			},
-		})
-		const count = await num.json()
-		foundCount = count.count
+		await fetchTotal()
 		let tradesRes = await fetch(`${PUBLIC_API_URL}/api/trades-paginated?${queryString}`, {
 			headers: {
 				'X-Origin': 'frontend',
@@ -123,7 +119,6 @@
 		})
 		trades = await tradesRes.json()
 	}
-
 </script>
 
 <Head title={`Bazaar`} description={'An archive of NationStates Trading Card trades'} />
