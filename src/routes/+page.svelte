@@ -65,6 +65,7 @@
 	async function fetchTotal() {
 		const res = await fetch(`${PUBLIC_API_URL}/api/tradestotal?${queryString}`, {
 			headers: { 'X-Origin': 'frontend' },
+			cache: 'no-store',
 		})
 		info = await res.json()
 		foundCount = info.count
@@ -78,6 +79,7 @@
 				headers: {
 					'X-Origin': 'frontend',
 				},
+				cache: 'no-store',
 			}
 		)
 		const newTrades = await req.json()
@@ -116,6 +118,7 @@
 			headers: {
 				'X-Origin': 'frontend',
 			},
+			cache: 'no-store',
 		})
 		trades = await tradesRes.json()
 	}
